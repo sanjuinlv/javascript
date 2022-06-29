@@ -78,3 +78,25 @@ class Cache {
 }
 
 export default Cache;
+
+//Just function
+function getCachingDecorator(func, cache = new Map()) {
+  //creates the hash key from given arguments by concatenating them.
+  function hash(args) {
+    args = [...args];
+    let hash = "";
+    args.forEach((arg) => {
+      hash += arg;
+    });
+    return hash;
+  }
+  return function () {
+    let key = hash(arguments);
+    if (cache.has(key)) {
+      return cache.get(key);
+    }
+    const result = func(...arguments);
+    cache.set(key, result);
+    return result;
+  };
+}
